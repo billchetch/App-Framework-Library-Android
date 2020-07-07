@@ -1,1 +1,1 @@
-include ':app', ':appframework', ':appresources', ':utilities'
+include ':app', ':appframework', ':utilities', ':appresources'
