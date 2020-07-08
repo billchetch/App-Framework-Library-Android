@@ -1,5 +1,6 @@
 package net.chetch.appframeworklib;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 
 import net.chetch.appframework.GenericActivity;
 import net.chetch.appframework.SettingsActivityBase;
+
+import java.util.Calendar;
 
 public class MainActivity extends GenericActivity implements View.OnClickListener {
 
@@ -38,6 +41,22 @@ public class MainActivity extends GenericActivity implements View.OnClickListene
             case R.id.testUCE:
                 String x = null;
                 x.toLowerCase();
+                break;
+
+            case R.id.warningAlert:
+                showWarningDialog("This is a test warning");
+                break;
+
+            case R.id.confirmationAlert:
+                showConfirmationDialog("This is a test conirmation", (dialogInterface, i) -> {
+                        Log.i("Main", "Confirmation clicked");
+                    });
+                break;
+
+            case R.id.testWakeUp:
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(cal.getTimeInMillis() + 2000);
+                setWakeUp(cal);
                 break;
 
             default:

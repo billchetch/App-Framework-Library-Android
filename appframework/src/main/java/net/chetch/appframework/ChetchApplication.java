@@ -29,6 +29,7 @@ public class ChetchApplication extends Application {
         if(uncaughtExceptionHandler == null){
             uncaughtExceptionHandler = new UncaughtExceptionHandler(this, LOG_FILE);
         }
+        Logger.info("Registering uce for " + getClass().getCanonicalName());
         Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
 
     }

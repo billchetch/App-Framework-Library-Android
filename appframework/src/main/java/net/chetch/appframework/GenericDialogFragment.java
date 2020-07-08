@@ -52,12 +52,16 @@ public class GenericDialogFragment extends AppCompatDialogFragment {
     }
 
     protected View inflateContentView(String layoutName){
+        return inflateContentView(getLayoutResource(layoutName));
+    }
+
+    protected View inflateContentView(int layoutResource){
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
 
-        contentView = inflater.inflate(getLayoutResource(layoutName), null);
+        contentView = inflater.inflate(layoutResource, null);
 
         return contentView;
     }

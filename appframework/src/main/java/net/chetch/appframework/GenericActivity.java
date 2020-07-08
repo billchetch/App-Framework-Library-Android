@@ -219,30 +219,22 @@ public abstract class GenericActivity extends ActivityBase {
 
     public void showWarningDialog(String warning){
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(getResourceString("dialog_warning_title"));
+        alertDialog.setTitle(getResourceString("dialog.warning.title"));
         alertDialog.setMessage(warning);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResourceString("button_ok"),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResourceString("button.ok"), (dialog,which)->{
+                   dialog.dismiss();
                 });
         alertDialog.show();
     }
 
     public void showConfirmationDialog(String message, DialogInterface.OnClickListener okListener){
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(getResourceString("dialog_confirmation_title"));
+        alertDialog.setTitle(getResourceString("dialog.confirmation.title"));
         alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResourceString("button_ok"), okListener);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResourceString("button.ok"), okListener);
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResourceString("button_cancel"),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResourceString("button.cancel"), (dialog,which)->{
+                    dialog.dismiss();
                 });
         alertDialog.show();
     }
