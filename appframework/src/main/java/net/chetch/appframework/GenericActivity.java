@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -177,6 +178,10 @@ public abstract class GenericActivity extends ActivityBase {
         errorDialog.throwable = t;
     }
 
+    public void showError(String errorMessage){
+        showError(0, errorMessage);
+    }
+
     public boolean isErrorShowing(){
         return errorDialog == null ? false : errorDialog.isShowing();
     }
@@ -205,6 +210,10 @@ public abstract class GenericActivity extends ActivityBase {
         if(tv != null){
             tv.setText(info);
         }
+    }
+
+    protected boolean permissionGranted(String permission){
+        return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
     protected void enableTouchEvents(boolean enable){
@@ -260,6 +269,10 @@ public abstract class GenericActivity extends ActivityBase {
     }
 
     protected void setWakeUp(Calendar wakeUp){
+        if(wakeUp != null &&  wakeUp.getTimeInMillis() <= Calendar.getInstance().getTimeInMillis()) { //test to see if this is ahead of now
+           throw new IllegalArgumentException("Cannot set wakeup to be in the past");
+        }
+
         //create an app wakeup
         Context ctx = getApplicationContext();
         Intent intent = new Intent(ctx, this.getClass());

@@ -34,7 +34,11 @@ public class ErrorDialogFragment extends GenericDialogFragment implements OnClic
         inflateContentView("dialog_error");
 
         TextView details = contentView.findViewById(getResourceID("errorDetails"));
-        details.setText(errorType + ": " + errorMessage);
+        if(errorType > 0) {
+            details.setText(errorType + ": " + errorMessage);
+        } else {
+            details.setText(errorMessage);
+        }
 
         contentView.findViewById(getResourceID("okButton")).setOnClickListener(this);
 

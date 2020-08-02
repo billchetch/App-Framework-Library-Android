@@ -1,6 +1,7 @@
 package net.chetch.appframework;
 
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ public class UCEActivity extends GenericActivity implements View.OnClickListener
 
         TextView tv = findViewById(getResourceID("uceErrorReport"));
         tv.setText(report);
+        tv.setMovementMethod(new ScrollingMovementMethod());
 
         startTimer(10);
     }
