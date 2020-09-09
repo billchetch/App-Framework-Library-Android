@@ -1,8 +1,8 @@
 package net.chetch.appframework;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.graphics.drawable.Drawable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class ActivityBase extends AppCompatActivity {
 
@@ -21,6 +21,11 @@ public abstract class ActivityBase extends AppCompatActivity {
     protected int getColorResource(String resourceName){
         int resource = getResourceID(resourceName, "color");
         return ContextCompat.getColor(getApplicationContext(), resource);
+    }
+
+    protected Drawable getDrawableResource(String resourceName){
+        int resource = getResourceID(resourceName, "drawable");
+        return ContextCompat.getDrawable(getApplicationContext(), resource);
     }
 
     protected int getStringResource(String resourceName){
