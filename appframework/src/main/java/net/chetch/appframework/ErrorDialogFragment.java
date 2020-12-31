@@ -24,12 +24,6 @@ public class ErrorDialogFragment extends GenericDialogFragment implements OnClic
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         inflateContentView("dialog_error");
 

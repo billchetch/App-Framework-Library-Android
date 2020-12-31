@@ -13,6 +13,8 @@ import java.util.Calendar;
 
 public class MainActivity extends GenericActivity implements View.OnClickListener {
 
+    CustomDialogFragment customDialogFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +54,16 @@ public class MainActivity extends GenericActivity implements View.OnClickListene
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(cal.getTimeInMillis() + 2000);
                 setWakeUp(cal);
+                break;
+
+            case R.id.testCustomDialog:
+                if(customDialogFragment != null){
+                    customDialogFragment.dismiss();
+                }
+
+                customDialogFragment = new CustomDialogFragment();
+                customDialogFragment.setFullScreen(0.9);
+                customDialogFragment.show(getSupportFragmentManager(), "CustomDialog");
                 break;
 
             default:

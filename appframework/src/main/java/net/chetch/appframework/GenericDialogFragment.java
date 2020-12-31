@@ -4,18 +4,35 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 
 public class GenericDialogFragment extends AppCompatDialogFragment {
 
+    public enum DisplayOptions{
+        NORMAL,
+        FULL_SCREEN
+    }
+
+
     protected Dialog dialog;
     protected View contentView;
     protected IDialogManager dialogManager;
+
+    protected DisplayOptions displayOptions = DisplayOptions.NORMAL;
+    protected double displayScale = 1.0;
+    protected int displayMargin = 0;
 
     protected int getResourceID(String resourceName){
         return getResources().getIdentifier(resourceName, "id", getContext().getPackageName());
@@ -51,6 +68,29 @@ public class GenericDialogFragment extends AppCompatDialogFragment {
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            if (savedInstanceState.containsKey("displayOptions")) {
+                displayOptions = DisplayOptions.valueOf(savedInstanceState.getString("displayOptions"));
+            }
+            if (savedInstanceState.containsKey("displayScale"))
+                displayScale = savedInstanceState.getDouble("displayScale");
+            if (savedInstanceState.containsKey("displayMargin"))
+                displayMargin = savedInstanceState.getInt("displayMargin");
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("displayOptions", displayOptions.toString());
+        outState.putDouble("displayScale", displayScale);
+        outState.putInt("displayMargin", displayMargin);
+    }
+
     protected View inflateContentView(String layoutName){
         return inflateContentView(getLayoutResource(layoutName));
     }
@@ -84,5 +124,36 @@ public class GenericDialogFragment extends AppCompatDialogFragment {
 
     public boolean isShowing(){
         return dialog != null ? dialog.isShowing() : false;
+    }
+
+    public void setFullScreen(double displayScale, int displayMargin){
+        displayOptions = DisplayOptions.FULL_SCREEN;
+        this.displayMargin = displayMargin;
+        this.displayScale = displayScale;
+    }
+
+    public void setFullScreen(double displayScale){
+        setFullScreen(displayScale, this.displayMargin);
+    }
+
+    protected void redraw(){
+        if(dialog != null && displayOptions == DisplayOptions.FULL_SCREEN) {
+            int width = (int)(getResources().getDisplayMetrics().widthPixels*displayScale);
+            int height = (int)(getResources().getDisplayMetrics().heightPixels*displayScale);
+            width -= displayMargin;
+            height -= displayMargin;
+            ViewGroup.LayoutParams lp = contentView.getLayoutParams();
+            lp.width = width;
+            lp.height = height;
+            contentView.setLayoutParams(lp);
+            dialog.getWindow().setLayout(width, height);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        redraw();
     }
 }
