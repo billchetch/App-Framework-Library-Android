@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+
 import android.util.Log;
 import android.view.View;
 
@@ -21,6 +23,14 @@ public class MainActivity extends GenericActivity implements View.OnClickListene
         setContentView(R.layout.activity_main);
 
         includeActionBar(SettingsActivity.class);
+
+        CustomPrevNextFragment prevNextFragment = (CustomPrevNextFragment)getSupportFragmentManager().findFragmentById(R.id.prevNextFragment);
+        prevNextFragment.observe(new Observer() {
+            @Override
+            public void onChanged(Object o) {
+                Log.i("Utils", "prev next fragment position ");
+            }
+        });
     }
 
     @Override

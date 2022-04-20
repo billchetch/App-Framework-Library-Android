@@ -79,7 +79,7 @@
                 android:text="Text Uncaught Exception" />
 
             <fragment
-                android:id="@+id/fragment3"
+                android:id="@+id/prevNextFragment"
                 android:name="net.chetch.appframeworklib.CustomPrevNextFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

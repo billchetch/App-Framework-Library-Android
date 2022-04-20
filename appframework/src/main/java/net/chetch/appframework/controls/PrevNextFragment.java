@@ -11,13 +11,15 @@ import net.chetch.appframework.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 abstract public class PrevNextFragment extends GenericFragment implements View.OnClickListener{
     View prevButton;
     View nextButton;
 
-    int position = 0;
+    protected int position = 0;
 
+    Observer observer;
 
     @Nullable
     @Override
@@ -35,17 +37,37 @@ abstract public class PrevNextFragment extends GenericFragment implements View.O
         return contentView;
     }
 
+    protected boolean isValidPosition(int position){
+        return true;
+    }
+
+    public void observe(Observer observer){
+        this.observer = observer;
+    }
+
     @Override
     public void onClick(View view) {
         if(view == prevButton){
-            position--;
-            onPrev();
+            if(isValidPosition(position - 1)) {
+                position--;
+                onPrev();
+            }
         } else if(view == nextButton){
-            position++;
-            onNext();
+            if(isValidPosition(position + 1)) {
+                position++;
+                onNext();
+            }
         }
     }
 
-    abstract protected void onPrev();
-    abstract protected void onNext();
+    public int getCurrentPosition(){
+        return position;
+    }
+
+    protected void onPrev(){
+        if(observer != null)observer.onChanged(this);
+    }
+    protected void onNext(){
+        if(observer != null)observer.onChanged(this);
+    }
 }
