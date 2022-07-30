@@ -23,6 +23,8 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import net.chetch.utilities.SLog;
+
 import java.util.Calendar;
 
 public abstract class GenericActivity extends ActivityBase {
@@ -36,11 +38,14 @@ public abstract class GenericActivity extends ActivityBase {
     //timer stuff
     protected int timerDelay = 30;
     boolean timerStarted = false;
+    boolean timerPaused = false;
+    boolean pauseResumeTimer = true;
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            int nextTimer = onTimer();
+            int nextTimer = timerDelay;
+            if(!timerPaused)nextTimer = onTimer();
             if(nextTimer > 0) {
                 timerHandler.postDelayed(this, timerDelay * 1000);
             }
@@ -52,13 +57,16 @@ public abstract class GenericActivity extends ActivityBase {
         return timerDelay;
     }
 
-    protected void startTimer(int timerDelay, int postDelay){
+    protected void startTimer(int timerDelay, int postDelay, boolean pauseResumeTimer){
         if(timerStarted)return;
         this.timerDelay = timerDelay;
+        this.pauseResumeTimer = pauseResumeTimer;
 
         timerHandler.postDelayed(timerRunnable, postDelay*1000);
         timerStarted = true;
     }
+
+    protected void startTimer(int timerDelay, int postDelay){ startTimer(timerDelay, postDelay, true); }
 
     protected void startTimer(int timerDelay){
         startTimer(timerDelay, timerDelay);
@@ -69,12 +77,34 @@ public abstract class GenericActivity extends ActivityBase {
         timerStarted = false;
     }
 
+    protected void pauseTimer(){
+        timerPaused = true;
+    }
+
+    protected void resumeTimer(){
+        timerPaused = false;
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.i("AppFramework", "GenericActivity.onCreate");
+        if(SLog.LOG)SLog.i("AppFramework", "GenericActivity.onCreate");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if(pauseResumeTimer)pauseTimer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(pauseResumeTimer)resumeTimer();
     }
 
     protected void includeActionBar(Class settingsClass){
@@ -90,7 +120,7 @@ public abstract class GenericActivity extends ActivityBase {
             }
             setSupportActionBar(toolbar);
         } catch (Exception e){
-            Log.e("GA", "includeActionBar: " + e.getMessage());
+            if(SLog.LOG)SLog.e("GA", "includeActionBar: " + e.getMessage());
         }
     }
 
@@ -135,7 +165,7 @@ public abstract class GenericActivity extends ActivityBase {
 
 
             } catch (Exception e){
-                Log.e("GA", "onCreateOptionsMenu: " + e.getMessage());
+                if(SLog.LOG)SLog.e("GA", "onCreateOptionsMenu: " + e.getMessage());
             }
         }
         return true;
@@ -161,7 +191,7 @@ public abstract class GenericActivity extends ActivityBase {
     }
 
     public void showError(int errorCode, String errorMessage){
-        Log.e("GAERROR", errorMessage);
+        if(SLog.LOG)SLog.e("GAERROR", errorMessage);
         hideProgress();
         dismissError();
 
@@ -173,8 +203,10 @@ public abstract class GenericActivity extends ActivityBase {
     }
 
     public void showError(Throwable t){
-        showError(0, t.getMessage());
-        errorDialog.throwable = t;
+        showError(0, t == null ? "N/A" : t.getMessage());
+        if(errorDialog != null) {
+            errorDialog.throwable = t;
+        }
     }
 
     public void showError(String errorMessage){
