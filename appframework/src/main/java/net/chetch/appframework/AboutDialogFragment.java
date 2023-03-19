@@ -13,6 +13,7 @@ import net.chetch.utilities.Logger;
 public class AboutDialogFragment extends GenericDialogFragment {
 
     public String aboutBlurb;
+    public String appVersion;
 
     public AboutDialogFragment(){
 
@@ -29,6 +30,10 @@ public class AboutDialogFragment extends GenericDialogFragment {
         inflateContentView("dialog_about");
 
         //fill in the about stuff
+        String version = getAppVersion();
+        TextView atv = contentView.findViewById(getResourceID("appVersion"));
+        atv.setText(version);
+
         String blurb = getAboutBlurb();
         TextView btv = contentView.findViewById(getResourceID("aboutBlurb"));
         btv.setText(blurb);
@@ -63,6 +68,16 @@ public class AboutDialogFragment extends GenericDialogFragment {
         return createDialog();
     }
 
+
+    protected String getAppVersion(){
+        if(appVersion != null)return appVersion;
+        try{
+            return "Version: " + getResourceString("app_version");
+        } catch (Exception e) {
+            return "About version goes here...";
+        }
+
+    }
     protected String getAboutBlurb(){
         if(aboutBlurb != null)return aboutBlurb;
 
