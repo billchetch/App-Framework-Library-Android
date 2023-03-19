@@ -17,6 +17,7 @@ import net.chetch.utilities.UncaughtExceptionHandler;
 
 public class ChetchApplication extends Application {
     protected String LOG_FILE = "chetchapp_log";
+    public String VERSION = "";
     protected UncaughtExceptionHandler uncaughtExceptionHandler;
 
     @Override
