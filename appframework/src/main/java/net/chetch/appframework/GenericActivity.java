@@ -28,7 +28,8 @@ import net.chetch.utilities.SLog;
 import java.util.Calendar;
 
 public abstract class GenericActivity extends ActivityBase {
-    private ErrorDialogFragment errorDialog;
+    protected ErrorDialogFragment errorDialog;
+    protected AboutDialogFragment aboutDialog;
 
     private boolean includeOptionsMenu = false;
 
@@ -186,8 +187,8 @@ public abstract class GenericActivity extends ActivityBase {
     }
 
     public void openAbout(){
-        DialogFragment dialog = new AboutDialogFragment();
-        dialog.show(getSupportFragmentManager(), "AboutDialog");
+        aboutDialog = new AboutDialogFragment();
+        aboutDialog.show(getSupportFragmentManager(), "AboutDialog");
     }
 
     public void showError(int errorCode, String errorMessage){
