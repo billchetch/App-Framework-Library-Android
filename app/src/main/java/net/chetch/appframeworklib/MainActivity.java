@@ -1,5 +1,6 @@
 package net.chetch.appframeworklib;
 
+import android.app.Notification;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 
 import net.chetch.appframework.GenericActivity;
+import net.chetch.appframework.NotificationBar;
 
 import java.util.Calendar;
 
@@ -31,6 +33,8 @@ public class MainActivity extends GenericActivity implements View.OnClickListene
                 Log.i("Utils", "prev next fragment position ");
             }
         });
+
+        NotificationBar.setView(findViewById(R.id.notificationBar));
     }
 
     @Override
@@ -74,6 +78,10 @@ public class MainActivity extends GenericActivity implements View.OnClickListene
                 customDialogFragment = new CustomDialogFragment();
                 customDialogFragment.setFullScreen(0.9);
                 customDialogFragment.show(getSupportFragmentManager(), "CustomDialog");
+                break;
+
+            case R.id.showNotificationBar:
+                NotificationBar.show(NotificationBar.NotificationType.INFO, "Yeip here we go", 5);
                 break;
 
             default:
