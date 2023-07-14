@@ -81,7 +81,14 @@ public class MainActivity extends GenericActivity implements View.OnClickListene
                 break;
 
             case R.id.showNotificationBar:
-                NotificationBar.show(NotificationBar.NotificationType.INFO, "Yeip here we go", 5);
+                NotificationBar nb = NotificationBar.show(NotificationBar.NotificationType.INFO, "Yeip here we go", 5);
+                nb.setListener(new NotificationBar.INotificationListener() {
+
+                    @Override
+                    public void onClick(NotificationBar nb, NotificationBar.NotificationType ntype) {
+                        showError("Wow it worked");
+                    }
+                });
                 break;
 
             default:

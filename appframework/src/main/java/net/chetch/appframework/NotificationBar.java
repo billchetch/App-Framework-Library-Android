@@ -17,9 +17,21 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import net.chetch.utilities.Animation;
 
-public class NotificationBar implements java.util.Observer {
+public class NotificationBar implements java.util.Observer, androidx.lifecycle.Observer, View.OnClickListener {
     public interface INotifiable{
         void handleNotification(Object notifier, String tag);
+    }
+
+    public static interface INotificationListener{
+        void onClick(NotificationBar nb, NotificationType ntype);
+
+        /*void onShow(NotificationBar nb, NotificationType ntype);
+
+        void onShown(NotificationBar nb, NotificationType ntype);
+
+        void onHide(NotificationBar nb, NotificationType ntype);
+
+        void onHidden(NotificationBar nb, NotificationType ntype);*/
     }
 
     class Notifier{
@@ -27,6 +39,7 @@ public class NotificationBar implements java.util.Observer {
         public INotifiable handler;
         public Object notifier;
         public String tag;
+        public Object data;
 
         public Notifier(INotifiable handler, Object notifier, String tag){
             this.handler = handler;
@@ -58,12 +71,13 @@ public class NotificationBar implements java.util.Observer {
         b.viewHeight = viewHeight;
         b.view = view;
         b.view.setVisibility(View.GONE);
+        b.view.setOnClickListener(b);
 
         String packageName = b.view.getContext().getPackageName();
 
         b.message = view.findViewById(b.view.getResources().getIdentifier("notificationMessage", "id", packageName));
 
-        int col = b.view.getResources().getIdentifier("bluegreen", "color", packageName);
+        int col = b.view.getResources().getIdentifier("bluegreen2", "color", packageName);
         b.colourMap.put(NotificationType.INFO, ContextCompat.getColor(b.view.getContext(), col));
 
         col = b.view.getResources().getIdentifier("warningYellow", "color", packageName);
@@ -78,26 +92,34 @@ public class NotificationBar implements java.util.Observer {
         setView(view, DEFAULT_VIEW_HEIGHT);
     }
 
-    static public void monitor(NotificationBar.INotifiable handler, LiveData liveData, String tag){
+    static public NotificationBar monitor(NotificationBar.INotifiable handler, LiveData liveData, String tag){
         NotificationBar b = getInstance();
 
         b.addSubject(handler, liveData, tag);
+
+        return b;
     }
 
-    static public void monitor(NotificationBar.INotifiable handler, Observable observable, String tag){
+    static public NotificationBar monitor(NotificationBar.INotifiable handler, Observable observable, String tag){
         NotificationBar b = getInstance();
 
         b.addSubject(handler, observable, tag);
+
+        return b;
     }
 
-    static public void show(NotificationType ntype, String message, int showFor){
+    static public NotificationBar show(NotificationType ntype, String message, Object data, int showFor){
         NotificationBar b = getInstance();
 
-        b.showNotification(ntype, message, showFor);
+        return b.showNotification(ntype, message, data, showFor);
     }
 
-    static public void show(NotificationType ntype, String message) {
-        show(ntype, message, -1);
+    static public NotificationBar show(NotificationType ntype, String message, Object data) {
+        return show(ntype, message, data, -1);
+    }
+
+    static public NotificationBar show(NotificationType ntype, String message) {
+        return show(ntype, message, null);
     }
 
     static public void hide(){
@@ -112,9 +134,12 @@ public class NotificationBar implements java.util.Observer {
     View view;
     TextView message;
     int viewHeight  = DEFAULT_VIEW_HEIGHT;
+    INotificationListener listener;
     Map<Object, NotificationBar.Notifier> subjects = new HashMap<>();
     Map<NotificationType, Integer> colourMap = new HashMap<>();
     boolean isShowing = false;
+    NotificationType notificationTypeShowing;
+    Object notificationData;
     int showDuration;
 
     final int timerDelay = 1; //in seconds
@@ -155,10 +180,17 @@ public class NotificationBar implements java.util.Observer {
         return nt;
     }
 
+    @Override
+    public void onClick(View view) {
+        if(listener != null){
+            listener.onClick(this, notificationTypeShowing);
+        }
+    }
+
     protected void addSubject(NotificationBar.INotifiable handler, LiveData liveData, String tag){
         if(!subjects.containsKey(liveData)){
-            //liveData.observeForever(this);
-            //subjects.put(liveData, new Notifier(handler, liveData, tag));
+            liveData.observeForever(this);
+            subjects.put(liveData, new Notifier(handler, liveData, tag));
         }
     }
 
@@ -167,6 +199,10 @@ public class NotificationBar implements java.util.Observer {
             observable.addObserver(this);
             subjects.put(observable, new Notifier(handler, observable, tag));
         }
+    }
+
+    public void setListener(INotificationListener listener){
+        this.listener = listener;
     }
 
     @Override
@@ -185,7 +221,9 @@ public class NotificationBar implements java.util.Observer {
     }
 
 
-    public void showNotification(NotificationType ntype, String message, int showFor){
+    public NotificationBar showNotification(NotificationType ntype, String message, Object data, int showFor){
+        notificationTypeShowing = ntype;
+        notificationData = data;
         isShowing = true;
         int col = colourMap.get(ntype);
         view.setBackgroundColor(col);
@@ -196,14 +234,26 @@ public class NotificationBar implements java.util.Observer {
             stopTimer();
         }
 
+        listener = null;
         view.setVisibility(View.VISIBLE);
         //view.setLayoutParams(lp);
         //view.requestLayout();
-        Animation.animateHeight(view, 0, viewHeight, 500);
+        ValueAnimator anim = Animation.animateHeight(view, 0, viewHeight, 500);
+        anim.addListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                //add here as required
+            }
+        });
+        return this;
     }
 
     public void hideNotification(){
         isShowing = false;
+        listener = null;
+        notificationData = null;
         stopTimer();
         ValueAnimator anim = Animation.animateHeight(view, viewHeight, 0, 500);
         anim.addListener(new AnimatorListenerAdapter()
