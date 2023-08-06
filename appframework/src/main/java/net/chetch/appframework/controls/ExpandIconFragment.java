@@ -48,7 +48,7 @@ public class ExpandIconFragment extends GenericFragment implements View.OnClickL
         return expanded;
     }
 
-    void contract(){
+    public void contract(){
         if(expanded){
             expandIcon.setRotation(0.0f);
             expanded = false;
@@ -56,7 +56,7 @@ public class ExpandIconFragment extends GenericFragment implements View.OnClickL
         }
     }
 
-    void expand(){
+    public void expand(){
         if(!expanded){
             expandIcon.setRotation(180.0f);
             expanded = true;
