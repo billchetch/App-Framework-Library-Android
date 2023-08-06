@@ -12,10 +12,14 @@ import android.view.View;
 
 import net.chetch.appframework.GenericActivity;
 import net.chetch.appframework.NotificationBar;
+import net.chetch.appframework.controls.ExpandIconFragment;
+import net.chetch.appframework.controls.IExpandIconListener;
+import net.chetch.appframework.controls.IPrevNextListener;
+import net.chetch.appframework.controls.PrevNextFragment;
 
 import java.util.Calendar;
 
-public class MainActivity extends GenericActivity implements View.OnClickListener {
+public class MainActivity extends GenericActivity implements View.OnClickListener, IPrevNextListener, IExpandIconListener {
 
     CustomDialogFragment customDialogFragment;
 
@@ -26,13 +30,11 @@ public class MainActivity extends GenericActivity implements View.OnClickListene
 
         includeActionBar(SettingsActivity.class);
 
-        CustomPrevNextFragment prevNextFragment = (CustomPrevNextFragment)getSupportFragmentManager().findFragmentById(R.id.prevNextFragment);
-        prevNextFragment.observe(new Observer() {
-            @Override
-            public void onChanged(Object o) {
-                Log.i("Utils", "prev next fragment position ");
-            }
-        });
+        PrevNextFragment prevNextFragment = (PrevNextFragment)getSupportFragmentManager().findFragmentById(R.id.prevNextFragment);
+        prevNextFragment.setListener(this);
+
+        ExpandIconFragment expandFragment = (ExpandIconFragment)getSupportFragmentManager().findFragmentById(R.id.expandIconFragment);
+        expandFragment.setListener(this);
 
         NotificationBar.setView(findViewById(R.id.notificationBar));
     }
@@ -97,5 +99,27 @@ public class MainActivity extends GenericActivity implements View.OnClickListene
         }
 
         Log.i("Main", "clicked " + id);
+    }
+
+    @Override
+    public boolean onPrev(int position) {
+        Log.i("Main", "Prev clicked");
+        return true;
+    }
+
+    @Override
+    public boolean onNext(int position) {
+        Log.i("Main", "Next clicked");
+        return true;
+    }
+
+    @Override
+    public void onExpand() {
+        Log.i("Main", "Expanded");
+    }
+
+    @Override
+    public void onContract() {
+        Log.i("Main", "Contracted");
     }
 }

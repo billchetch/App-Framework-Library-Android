@@ -97,7 +97,14 @@
 
             <fragment
                 android:id="@+id/prevNextFragment"
-                android:name="net.chetch.appframeworklib.CustomPrevNextFragment"
+                android:name="net.chetch.appframework.controls.PrevNextFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <fragment
+                android:id="@+id/expandIconFragment"
+                android:name="net.chetch.appframework.controls.ExpandIconFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
