@@ -17,9 +17,9 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import net.chetch.utilities.Animation;
 
-public class NotificationBar implements java.util.Observer, androidx.lifecycle.Observer, View.OnClickListener {
+public class NotificationBar implements java.util.Observer, View.OnClickListener {
     public interface INotifiable{
-        void handleNotification(Object notifier, String tag);
+        void handleNotification(Object notifier, String tag, Object data);
     }
 
     public static interface INotificationListener{
@@ -189,7 +189,7 @@ public class NotificationBar implements java.util.Observer, androidx.lifecycle.O
 
     protected void addSubject(NotificationBar.INotifiable handler, LiveData liveData, String tag){
         if(!subjects.containsKey(liveData)){
-            liveData.observeForever(this);
+            liveData.observeForever( (Object o) -> { update(liveData, o); });
             subjects.put(liveData, new Notifier(handler, liveData, tag));
         }
     }
@@ -209,14 +209,14 @@ public class NotificationBar implements java.util.Observer, androidx.lifecycle.O
     public void update(Observable observable, Object o) {
         if(subjects.containsKey(observable)){
             Notifier n = subjects.get(observable);
-            n.handler.handleNotification(n.notifier, n.tag);
+            n.handler.handleNotification(n.notifier, n.tag, o);
         }
     }
 
-    public void onChanged(Object o) {
-        if(subjects.containsKey(o)){
-            Notifier n = subjects.get(o);
-            n.handler.handleNotification(n.notifier, n.tag);
+    public void update(LiveData observable, Object o) {
+        if(subjects.containsKey(observable)){
+            Notifier n = subjects.get(observable);
+            n.handler.handleNotification(n.notifier, n.tag, o);
         }
     }
 
