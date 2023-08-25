@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 public class ExpandIconFragment extends GenericFragment implements View.OnClickListener{
 
     ImageView expandIcon;
+    boolean enabled = true;
     boolean expanded = false;
     IExpandIconListener listener;
 
@@ -37,6 +38,8 @@ public class ExpandIconFragment extends GenericFragment implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+        if(!enabled)return;
+
         if(expanded){
             contract();
         } else {
@@ -49,6 +52,8 @@ public class ExpandIconFragment extends GenericFragment implements View.OnClickL
     }
 
     public void contract(){
+        if(!enabled)return;
+
         if(expanded){
             expandIcon.setRotation(0.0f);
             expanded = false;
@@ -57,10 +62,23 @@ public class ExpandIconFragment extends GenericFragment implements View.OnClickL
     }
 
     public void expand(){
+        if(!enabled)return;
+
         if(!expanded){
             expandIcon.setRotation(180.0f);
             expanded = true;
             if(listener != null)listener.onExpand();
         }
+    }
+
+    public void disable(){
+        contract();
+        enabled = false;
+        expandIcon.setAlpha(0.5f);;
+    }
+
+    public void enable(){
+        enabled = true;
+        expandIcon.setAlpha(1.0f);;
     }
 }
