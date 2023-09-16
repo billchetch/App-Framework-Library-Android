@@ -42,60 +42,44 @@ public class MainActivity extends GenericActivity implements View.OnClickListene
     @Override
     public void onClick(View view) {
         String id = getResourceName(view.getId());
-        switch(view.getId()){
-            case R.id.openErrorDialog:
-                showError(1, "This is a test error");
-                break;
 
-            case R.id.openAboutDialog:
-                openAbout();
-                break;
+        int viewId = view.getId();
+        if (viewId == R.id.openErrorDialog) {
+            showError(1, "This is a test error");
+        } else if (viewId == R.id.openAboutDialog) {
+            openAbout();
+        } else if (viewId == R.id.testUCE) {
+            String x = null;
+            x.toLowerCase();
+        } else if (viewId == R.id.warningAlert) {
+            showWarningDialog("This is a test warning");
+        } else if (viewId == R.id.confirmationAlert) {
+            showConfirmationDialog("This is a test conirmation", (dialogInterface, i) -> {
+                Log.i("Main", "Confirmation clicked");
+            });
+        } else if (viewId == R.id.testWakeUp) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(cal.getTimeInMillis() + 2000);
+            setWakeUp(cal);
+        } else if (viewId == R.id.testCustomDialog) {
+            if (customDialogFragment != null) {
+                customDialogFragment.dismiss();
+            }
 
-            case R.id.testUCE:
-                String x = null;
-                x.toLowerCase();
-                break;
+            customDialogFragment = new CustomDialogFragment();
+            customDialogFragment.setFullScreen(0.9);
+            customDialogFragment.show(getSupportFragmentManager(), "CustomDialog");
+        } else if (viewId == R.id.showNotificationBar) {
+            NotificationBar nb = NotificationBar.show(NotificationBar.NotificationType.INFO, "Yeip here we go", 5);
+            nb.setListener(new NotificationBar.INotificationListener() {
 
-            case R.id.warningAlert:
-                showWarningDialog("This is a test warning");
-                break;
-
-            case R.id.confirmationAlert:
-                showConfirmationDialog("This is a test conirmation", (dialogInterface, i) -> {
-                        Log.i("Main", "Confirmation clicked");
-                    });
-                break;
-
-            case R.id.testWakeUp:
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(cal.getTimeInMillis() + 2000);
-                setWakeUp(cal);
-                break;
-
-            case R.id.testCustomDialog:
-                if(customDialogFragment != null){
-                    customDialogFragment.dismiss();
+                @Override
+                public void onClick(NotificationBar nb, NotificationBar.NotificationType ntype) {
+                    showError("Wow it worked");
                 }
-
-                customDialogFragment = new CustomDialogFragment();
-                customDialogFragment.setFullScreen(0.9);
-                customDialogFragment.show(getSupportFragmentManager(), "CustomDialog");
-                break;
-
-            case R.id.showNotificationBar:
-                NotificationBar nb = NotificationBar.show(NotificationBar.NotificationType.INFO, "Yeip here we go", 5);
-                nb.setListener(new NotificationBar.INotificationListener() {
-
-                    @Override
-                    public void onClick(NotificationBar nb, NotificationBar.NotificationType ntype) {
-                        showError("Wow it worked");
-                    }
-                });
-                break;
-
-            default:
-                Log.e("Main", "Uncrecognsied " +id);
-                break;
+            });
+        } else {
+            Log.e("Main", "Uncrecognsied " + id);
         }
 
         Log.i("Main", "clicked " + id);
