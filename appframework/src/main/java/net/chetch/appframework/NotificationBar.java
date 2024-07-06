@@ -52,6 +52,12 @@ public class NotificationBar implements java.util.Observer, View.OnClickListener
         INFO,
         WARNING,
         ERROR,
+
+        ALERT,
+
+        SUCCESS,
+
+        FAILURE
     }
 
     static protected NotificationBar instance;
@@ -85,6 +91,15 @@ public class NotificationBar implements java.util.Observer, View.OnClickListener
 
         col = b.view.getResources().getIdentifier("errorRed", "color", packageName);
         b.colourMap.put(NotificationType.ERROR, ContextCompat.getColor(b.view.getContext(), col));
+
+        col = b.view.getResources().getIdentifier("errorRed", "color", packageName);
+        b.colourMap.put(NotificationType.ALERT, ContextCompat.getColor(b.view.getContext(), col));
+
+        col = b.view.getResources().getIdentifier("bluegreen2", "color", packageName);
+        b.colourMap.put(NotificationType.SUCCESS, ContextCompat.getColor(b.view.getContext(), col));
+
+        col = b.view.getResources().getIdentifier("warningYellow", "color", packageName);
+        b.colourMap.put(NotificationType.FAILURE, ContextCompat.getColor(b.view.getContext(), col));
     }
 
 
