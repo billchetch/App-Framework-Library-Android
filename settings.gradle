@@ -1,5 +1,5 @@
 include ':app', ':appframework'
 include ':utilities'
-project(':utilities').projectDir=new File('/Users/billthorgerson/Documents/AndroidStudioProjects/Utils/utilities')
+project(':utilities').projectDir=new File('/Users/billthorgerson/AndroidStudioProjects/Utils/utilities')
 include ':appresources'
-project(':appresources').projectDir=new File('/Users/billthorgerson/Documents/AndroidStudioProjects/AppResourcesLib/appresources')
+project(':appresources').projectDir=new File('/Users/billthorgerson/AndroidStudioProjects/AppResources/appresources')
