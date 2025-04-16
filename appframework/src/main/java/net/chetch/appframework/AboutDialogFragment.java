@@ -35,8 +35,7 @@ public class AboutDialogFragment extends GenericDialogFragment {
         atv.setText(version);
 
         String blurb = getAboutBlurb();
-        TextView btv = contentView.findViewById(getResourceID("aboutBlurb"));
-        btv.setText(blurb);
+        setAboutBlurb(blurb);
 
         //fill in log info
         String logData = Logger.read();
@@ -85,6 +84,15 @@ public class AboutDialogFragment extends GenericDialogFragment {
             return getResourceString("about_blurb");
         } catch (Exception e) {
             return "About blurb goes here...";
+        }
+    }
+
+    public void setAboutBlurb(String blurb){
+        if(contentView == null)return;
+        aboutBlurb = blurb;
+        TextView btv = contentView.findViewById(getResourceID("aboutBlurb"));
+        if(btv != null) {
+            btv.setText(blurb);
         }
     }
 }
