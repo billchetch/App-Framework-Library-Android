@@ -258,14 +258,19 @@ public abstract class GenericActivity extends ActivityBase {
     }
 
 
-    public void showWarningDialog(String warning){
+    public void showWarningDialog(String warning, DialogInterface.OnClickListener okListener){
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(getResourceString("dialog.warning.title"));
         alertDialog.setMessage(warning);
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResourceString("button.ok"), (dialog,which)->{
                    dialog.dismiss();
+                   if(okListener != null)okListener.onClick(dialog, which);
                 });
         alertDialog.show();
+    }
+
+    public void showWarningDialog(String warning){
+        showWarningDialog(warning, null);
     }
 
     public void showConfirmationDialog(String message, DialogInterface.OnClickListener okListener){
