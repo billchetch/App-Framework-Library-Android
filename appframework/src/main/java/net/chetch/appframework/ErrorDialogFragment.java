@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class ErrorDialogFragment extends GenericDialogFragment implements OnClickListener {
@@ -12,6 +13,8 @@ public class ErrorDialogFragment extends GenericDialogFragment implements OnClic
     public int errorType;
     public String errorMessage;
     public Throwable throwable = null;
+
+    public boolean useOkButton = true;
 
     public ErrorDialogFragment(){
 
@@ -34,7 +37,15 @@ public class ErrorDialogFragment extends GenericDialogFragment implements OnClic
             details.setText(errorMessage);
         }
 
-        contentView.findViewById(getResourceID("okButton")).setOnClickListener(this);
+        Button okButton = contentView.findViewById(getResourceID(("okButton")));
+        if(okButton != null){
+            if(useOkButton) {
+                okButton.setOnClickListener(this);
+                okButton.setVisibility(View.VISIBLE);
+            } else {
+                okButton.setVisibility(View.GONE);
+            }
+        }
 
         // Create the AlertDialog object and return it
         dialog = createDialog();

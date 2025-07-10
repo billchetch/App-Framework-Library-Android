@@ -192,7 +192,7 @@ public abstract class GenericActivity extends ActivityBase {
         return aboutDialog;
     }
 
-    public ErrorDialogFragment showError(int errorCode, String errorMessage){
+    public ErrorDialogFragment showError(int errorCode, String errorMessage, boolean useOkButton){
         if(SLog.LOG)SLog.e("GAERROR", errorMessage);
         hideProgress();
         dismissError();
@@ -200,9 +200,14 @@ public abstract class GenericActivity extends ActivityBase {
         errorDialog = new ErrorDialogFragment();
         errorDialog.errorType = errorCode;
         errorDialog.errorMessage = errorMessage;
+        errorDialog.useOkButton = useOkButton;
 
         errorDialog.show(getSupportFragmentManager(), "ErrorDialog");
         return errorDialog;
+    }
+
+    public ErrorDialogFragment showError(int errorCode, String errorMessage){
+        return showError(errorCode, errorMessage, true);
     }
 
     public ErrorDialogFragment showError(Throwable t){
@@ -215,6 +220,10 @@ public abstract class GenericActivity extends ActivityBase {
 
     public ErrorDialogFragment showError(String errorMessage){
         return showError(0, errorMessage);
+    }
+
+    public ErrorDialogFragment showError(String errorMessage, boolean useOkButton){
+        return showError(0, errorMessage, useOkButton);
     }
 
     public boolean isErrorShowing(){
