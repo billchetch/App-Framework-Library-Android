@@ -186,12 +186,13 @@ public abstract class GenericActivity extends ActivityBase {
         }
     }
 
-    public void openAbout(){
+    public AboutDialogFragment openAbout(){
         aboutDialog = new AboutDialogFragment();
         aboutDialog.show(getSupportFragmentManager(), "AboutDialog");
+        return aboutDialog;
     }
 
-    public void showError(int errorCode, String errorMessage){
+    public ErrorDialogFragment showError(int errorCode, String errorMessage){
         if(SLog.LOG)SLog.e("GAERROR", errorMessage);
         hideProgress();
         dismissError();
@@ -201,17 +202,19 @@ public abstract class GenericActivity extends ActivityBase {
         errorDialog.errorMessage = errorMessage;
 
         errorDialog.show(getSupportFragmentManager(), "ErrorDialog");
+        return errorDialog;
     }
 
-    public void showError(Throwable t){
+    public ErrorDialogFragment showError(Throwable t){
         showError(0, t == null ? "N/A" : t.getMessage());
         if(errorDialog != null) {
             errorDialog.throwable = t;
         }
+        return errorDialog;
     }
 
-    public void showError(String errorMessage){
-        showError(0, errorMessage);
+    public ErrorDialogFragment showError(String errorMessage){
+        return showError(0, errorMessage);
     }
 
     public boolean isErrorShowing(){

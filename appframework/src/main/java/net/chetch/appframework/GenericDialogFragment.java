@@ -2,6 +2,7 @@ package net.chetch.appframework;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
@@ -25,6 +26,11 @@ public class GenericDialogFragment extends AppCompatDialogFragment {
         FULL_SCREEN
     }
 
+    public interface IDismissListener{
+        void onDismiss(DialogInterface dialogInterface);
+    }
+
+    private IDismissListener dismissListener;
 
     protected Dialog dialog;
     protected View contentView;
@@ -33,6 +39,8 @@ public class GenericDialogFragment extends AppCompatDialogFragment {
     protected DisplayOptions displayOptions = DisplayOptions.NORMAL;
     protected double displayScale = 1.0;
     protected int displayMargin = 0;
+
+
 
     protected int getResourceID(String resourceName){
         return getResources().getIdentifier(resourceName, "id", getContext().getPackageName());
@@ -118,7 +126,16 @@ public class GenericDialogFragment extends AppCompatDialogFragment {
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        dialog.setOnDismissListener(dialogInterface -> {
+            if(this.dismissListener != null){
+                dismissListener.onDismiss(dialogInterface);
+            }
+        });
         return dialog;
+
+    }
+
+    public void setOnDismissListener(IDismissListener dismissListener){
 
     }
 
