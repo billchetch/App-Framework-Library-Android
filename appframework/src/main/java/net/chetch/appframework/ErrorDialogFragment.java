@@ -38,6 +38,7 @@ public class ErrorDialogFragment extends GenericDialogFragment implements OnClic
 
         // Create the AlertDialog object and return it
         dialog = createDialog();
+        dialog.setCanceledOnTouchOutside(false);
 
         return dialog;
     }
