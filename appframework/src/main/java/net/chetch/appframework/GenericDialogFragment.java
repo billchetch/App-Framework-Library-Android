@@ -126,17 +126,19 @@ public class GenericDialogFragment extends AppCompatDialogFragment {
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        dialog.setOnDismissListener(dialogInterface -> {
-            if(this.dismissListener != null){
-                dismissListener.onDismiss(dialogInterface);
-            }
-        });
         return dialog;
-
     }
 
     public void setOnDismissListener(IDismissListener dismissListener){
+        this.dismissListener = dismissListener;
+    }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if(this.dismissListener != null){
+            dismissListener.onDismiss(dialog);
+        }
     }
 
     public boolean isShowing(){

@@ -225,6 +225,12 @@ public abstract class GenericActivity extends ActivityBase {
         if(errorDialog != null)errorDialog.dismiss();
     }
 
+
+    public void showProgress(String info){
+        showProgress();
+        setProgressInfo(info);
+    }
+
     public void showProgress(int visibility){
         ProgressBar pb = findViewById(getResourceID("progressBar"));
         if(pb != null){
