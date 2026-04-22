@@ -3,10 +3,15 @@ package net.chetch.appframework;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.preference.ListPreference;
+import androidx.preference.PreferenceManager;
+
+import net.chetch.utilities.SLog;
 
 abstract public class SettingsActivityBase extends ActivityBase implements SharedPreferences.OnSharedPreferenceChangeListener{
     private static final String LOG_TAG = "Settings";
+
+    protected ErrorDialogFragment errorDialog;
 
     protected boolean restartMainActivityOnFinish = false;
 
@@ -15,12 +20,17 @@ abstract public class SettingsActivityBase extends ActivityBase implements Share
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource("activity_settings"));
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
+
+    }
+
+    protected void onCreatePreferences(SettingsFragment fragment){
+        //SLog.i(LOG_TAG, "Create preferences");
 
     }
 
@@ -41,5 +51,21 @@ abstract public class SettingsActivityBase extends ActivityBase implements Share
             startActivity(intent);
             finish();
         }
+    }
+
+    public ErrorDialogFragment showError(int errorCode, String errorMessage, boolean useOkButton){
+        if(SLog.LOG)SLog.e("SettingsError", errorMessage);
+
+        if(errorDialog != null){
+            errorDialog.dismiss();
+        }
+
+        errorDialog = new ErrorDialogFragment();
+        errorDialog.errorType = errorCode;
+        errorDialog.errorMessage = errorMessage;
+        errorDialog.useOkButton = useOkButton;
+
+        errorDialog.show(getSupportFragmentManager(), "ErrorDialog");
+        return errorDialog;
     }
 }

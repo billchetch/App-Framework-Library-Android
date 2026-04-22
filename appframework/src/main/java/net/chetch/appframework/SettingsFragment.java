@@ -1,15 +1,18 @@
 package net.chetch.appframework;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 
-public class SettingsFragment extends PreferenceFragment {
+import androidx.annotation.Nullable;
+import androidx.preference.PreferenceFragmentCompat;
+
+public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
         // Load the preferences from an XML resource
         int resource = getResources().getIdentifier("preferences", "xml", getActivity().getPackageName());
         addPreferencesFromResource(resource);
+
+        ((SettingsActivityBase)getActivity()).onCreatePreferences(this);
     }
+
 }
