@@ -73,6 +73,7 @@ public class GenericDialogFragment extends AppCompatDialogFragment {
 
         if(context instanceof IDialogManager) {
             dialogManager = (IDialogManager) context;
+            dialogManager.onDialogAttached(this);
         }
     }
 
