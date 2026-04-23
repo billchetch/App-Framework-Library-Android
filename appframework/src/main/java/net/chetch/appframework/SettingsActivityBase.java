@@ -61,7 +61,7 @@ abstract public class SettingsActivityBase extends ActivityBase implements Share
         }
 
         errorDialog = new ErrorDialogFragment();
-        errorDialog.errorType = errorCode;
+        errorDialog.errorCode = errorCode;
         errorDialog.errorMessage = errorMessage;
         errorDialog.useOkButton = useOkButton;
 

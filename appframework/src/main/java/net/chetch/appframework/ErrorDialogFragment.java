@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class ErrorDialogFragment extends GenericDialogFragment implements OnClickListener {
 
-    public int errorType;
+    public int errorCode;
     public String errorMessage;
     public Throwable throwable = null;
 
@@ -20,19 +20,16 @@ public class ErrorDialogFragment extends GenericDialogFragment implements OnClic
 
     }
 
-    public int getErrorType(){ return errorType; }
+    public int getErrorCode(){ return errorCode; }
 
-    public boolean isErrorType(int errorType){
-        return this.errorType == errorType;
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         inflateContentView("dialog_error");
 
         TextView details = contentView.findViewById(getResourceID("errorDetails"));
-        if(errorType > 0) {
-            details.setText(errorType + ": " + errorMessage);
+        if(errorCode > 0) {
+            details.setText(errorCode + ": " + errorMessage);
         } else {
             details.setText(errorMessage);
         }
