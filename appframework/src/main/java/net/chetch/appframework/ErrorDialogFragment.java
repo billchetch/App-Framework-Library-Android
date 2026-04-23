@@ -11,6 +11,8 @@ import android.widget.TextView;
 public class ErrorDialogFragment extends GenericDialogFragment implements OnClickListener {
 
     public int errorCode;
+
+    public boolean showErrorCode = false;
     public String errorMessage;
     public Throwable throwable = null;
 
@@ -28,7 +30,7 @@ public class ErrorDialogFragment extends GenericDialogFragment implements OnClic
         inflateContentView("dialog_error");
 
         TextView details = contentView.findViewById(getResourceID("errorDetails"));
-        if(errorCode > 0) {
+        if(errorCode > 0 && showErrorCode) {
             details.setText(errorCode + ": " + errorMessage);
         } else {
             details.setText(errorMessage);
