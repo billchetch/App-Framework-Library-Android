@@ -67,11 +67,15 @@ public class GenericDialogFragment extends AppCompatDialogFragment {
         return getString(getStringResource(resourceName));
     }
 
+    public void setDialogManager(IDialogManager dialogManager){
+        this.dialogManager = dialogManager;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context instanceof IDialogManager) {
+        if(context instanceof IDialogManager && dialogManager == null) {
             dialogManager = (IDialogManager) context;
             dialogManager.onDialogAttached(this);
         }
